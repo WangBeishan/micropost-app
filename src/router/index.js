@@ -8,6 +8,7 @@ import Microposts from '../components/Microposts.vue'
 import Welcome from '../components/Welcome.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
+import User from '../components/User.vue'
 
 Vue.use(VueRouter)
 
@@ -21,24 +22,16 @@ const routes = [
     component: Home,
     redirect: "/microposts",
     children: [
-      { path: '/microposts', component: Microposts}
+      { path: '/microposts', component: Microposts },
+      { path: '/about', component: About },
+      { path: '/userList', component: UserList},
+      { path: '/help', component: Help },
+      { path: '/users/:id', component: User }
     ]
   },
   {
     path: '/login',
     component: Login
-  },
-  {
-    path: "/about",
-    component: About
-  },
-  {
-    path: "/help",
-    component: Help
-  },
-  {
-    path: "/userList",
-    component: UserList
   },
   {
     path: "/register",
@@ -52,13 +45,7 @@ const router = new VueRouter({
 
 // 掛載路由導航守衛
 router.beforeEach((to, from, next) => {
-  if (to.path == '/') {
-    return next();
-  }
   const userFlag = window.sessionStorage.getItem("user");
-  if (!userFlag) {
-    return next("/home");
-  }
   next();
 })
 

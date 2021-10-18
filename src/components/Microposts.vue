@@ -26,7 +26,7 @@
               <a :href="'/#/users/' + content.userId"
                 ><img src="../assets/logo.png" width="50px" height="50px"
               /></a>
-              <strong>{{ content.userId }}</strong>
+              <strong>{{ content.username}}</strong>
               <p>{{ content.content }}</p>
               <div class="shadow_line"></div>
             </div>
@@ -58,11 +58,12 @@ export default {
   },
   methods: {
     async post() {
-        if (this.postForm.content === "") {
-            this.$message.error("內容爲空");
-            return;
-        }
+      if (this.postForm.content === "") {
+        this.$message.error("內容爲空");
+        return;
+      }
       this.postForm.userId = JSON.parse(window.sessionStorage.getItem("user")).id;
+      console.log(this.postForm.userId);
       const { data: res } = await this.$http.post("post", this.postForm);
       if (res.flag == "success") {
         this.$message.success("發佈成功");
@@ -81,23 +82,26 @@ export default {
 </script>
 
 <style scoped>
+.post_time {
+  position: relative;
+  left: 60%;
+}
 .btn {
-  display: flex;
-  justify-content: flex-end;
+  position: relative;
   padding: 3%;
-      transform: translate(0%, 30%);
-
+  left: 75%;
+  margin: 2%;
 }
 .post_box {
   position: relative;
   padding-left: 6%;
-  padding-top: 50%;
+  padding-top: 70%;
 }
 .shadow_line {
   width: 700px;
   height: 1px;
-  background-color: #2b4b6b;
-  box-shadow: 0 0 2px #eee;
+  background-color: #2f2f2f;
+  margin-top: 2%;
 }
 h2 {
   padding: 2em;
@@ -125,9 +129,9 @@ li {
 }
 .avatar_box {
   height: 50%;
-  margin: 0;
+  margin: 10px;
   position: absolute;
-  left: 20%;
+  left: 10%;
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
@@ -135,5 +139,10 @@ li {
   display: flex;
 }
 .content_container {
+}
+.name {
+  position: relative;
+  padding: 15%;
+  bottom: 7%;
 }
 </style>
