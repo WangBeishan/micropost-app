@@ -5,9 +5,9 @@
         <strong>{{ this.user.username }}</strong>
       </div>
       <!-- card body -->
-      <div v-for="content in contents" class="content_container">
+      <div v-for="content in contents" class="content_container" v-bind:key="content.userId">
         <aside class="avatar_box">
-          <img src="../assets/logo.png" />
+          <img :src="require('../assets/HeadImg/' + user.email + '.jpg')"/>
         </aside>
         <main class="content_box">
           <strong>{{ content.username }}</strong>
@@ -26,6 +26,7 @@ export default {
       user: {
         id: "",
         username: "",
+        email: "",
       },
       contents: "",
     };
@@ -39,11 +40,11 @@ export default {
       this.user.id = this.$route.params.id;
       const { data: res } = await this.$http.get("/users/" + this.user.id);
       this.user.username = res.username;
+      this.user.email = res.email;
     },
     async getContent() {
       const { data: res } = await this.$http.get("/contentByUserId/" + this.user.id);
       this.contents = res;
-      console.log(res);
     },
   },
 };
@@ -85,7 +86,6 @@ export default {
 }
 img {
     position: relative;
-    padding-top: 5%;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -93,9 +93,8 @@ img {
 }
 .content_box {
     position: relative;
-    left: 12%;
+    left: 5%;
     top: -30%;
     flex: 1 1 auto;
-
 }
 </style>

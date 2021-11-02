@@ -21,13 +21,14 @@
       <h2>Microposts</h2>
       <div class="content">
         <ul>
-          <li v-for="content in contents">
+          <li v-for="content in contents" v-bind:key="content.userId">
             <div>
-              <a :href="'/#/users/' + content.userId"
-                ><img src="../assets/logo.png" width="50px" height="50px"
+              <a :href="'/#/users/' + content.userId" class="headImg_box"
+                ><img class="head_img" :src="require('../assets/HeadImg/' + content.email + '.jpg')" width="50px" height="50px"
               /></a>
-              <strong>{{ content.username}}</strong>
+              <strong>{{ content.username }}</strong>
               <p>{{ content.content }}</p>
+              <small class="date_box">{{ time(content.crtTime) }}</small>
               <div class="shadow_line"></div>
             </div>
           </li>
@@ -54,6 +55,7 @@ export default {
   created() {
     let data = window.sessionStorage.getItem("user");
     this.user.username = JSON.parse(data).username;
+    console.log(this.user.username);
     this.getContent();
   },
   methods: {
@@ -77,11 +79,31 @@ export default {
       const { data: res } = await this.$http.get("/getContent");
       this.contents = res;
     },
+    time(time =+ new Date()) {
+      var date = new Date(time + 16 * 3600 * 1000);
+      return date.toJSON().substr(5, 14).replace('T', ' ');
+    }
   },
 };
 </script>
 
 <style scoped>
+
+.headImg_box {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    box-shadow: 0 0 2px #ddd;
+}
+.head_img {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #eee;
+}
 .post_time {
   position: relative;
   left: 60%;
@@ -100,7 +122,7 @@ export default {
 .shadow_line {
   width: 700px;
   height: 1px;
-  background-color: #2f2f2f;
+  background-color: #dcdfe6;
   margin-top: 2%;
 }
 h2 {
@@ -112,8 +134,7 @@ ul {
 li {
   padding: 1em;
 }
-.container {
-}
+
 .side_bar {
   width: 30%;
   height: 100%;
@@ -138,8 +159,7 @@ li {
   display: -webkit-flex;
   display: flex;
 }
-.content_container {
-}
+
 .name {
   position: relative;
   padding: 15%;

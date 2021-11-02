@@ -15,9 +15,9 @@
     <h4>這是一個練習用項目測試用，Bug很多，未實現的功能很多，正在一步一步完善。</h4>
     <h3>計劃實現的功能：</h3>
     <ul>
-      <li>密碼加密</li>
-      <li>郵箱驗證註冊</li>
-      <li>隨機用戶頭像</li>
+      <li><i class="el-icon-success"></i> 密碼加密</li>
+      <li><i class="el-icon-success"></i> 郵箱驗證註冊</li>
+      <li><i class="el-icon-success"></i> 隨機用戶頭像</li>
     </ul>
   </div>
 </template>

@@ -6,7 +6,6 @@
           :model="registerForm"
           :rules="registerRules"
           label-width="90px"
-          ref="registerForm"
         >
           <el-form-item label="Username" prop="username">
             <el-input v-model="registerForm.username"></el-input>
@@ -15,10 +14,7 @@
             <el-input v-model="registerForm.email"></el-input>
           </el-form-item>
           <el-form-item label="Password" prop="password">
-            <el-input
-              v-model="registerForm.password"
-              type="password"
-            ></el-input>
+            <el-input v-model="registerForm.password"></el-input>
           </el-form-item>
           <el-form-item label="Verify Code" prop="verifyCode">
             <el-input
@@ -47,8 +43,8 @@ export default {
   data() {
     return {
       registerForm: {
-        username: "test",
-        email: "test@email.com",
+        username: "wbs",
+        email: "wangbeishan9527@gmail.com",
         password: "",
         verifyCode: "",
       },
@@ -57,17 +53,17 @@ export default {
         // 郵箱效驗
         email: [
           { required: true, message: "請輸入郵箱", trigger: "blur" },
-          { min: 6, max: 64, message: "長度不大與64", trigger: "blur" }
+          { min: 6, max: 64, message: "長度不大與64", trigger: "blur" },
         ],
         // 用戶名效驗
         username: [
           { required: true, message: "請輸入用戶名", trigger: "blur" },
-          { min: 4, max: 64, message: "長度不大與64", trigger: "blur" }
+          { min: 4, max: 64, message: "長度不大與64", trigger: "blur" },
         ],
         // 密碼效驗
         password: [
           { required: true, message: "請輸入密碼", trigger: "blue" },
-          { min: 6, max: 24, message: "長度不能小於6", trigger: "blur" }
+          { min: 6, max: 24, message: "長度不能小於6", trigger: "blur" },
         ],
       },
     };
@@ -78,17 +74,14 @@ export default {
       this.code = res;
     },
     async register() {
-      if (
-        this.code != this.registerForm.verifyCode
-      ) {
-        this.$message.error("Verify code error, Please try again.");
-        return;
-      }
       const { data: res } = await this.$http.post(
         "register",
         this.registerForm
       );
-      if (res == "success") {
+      if (this.code != this.registerForm.verifyCode) {
+        this.$message.error("Verify code error, Please try again");
+        return;
+      } else if (res == "success") {
         setTimeout(() => {
           this.$message.success("Success, Will jump to the login page.");
           this.$router.push("login");

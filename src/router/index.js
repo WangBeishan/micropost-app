@@ -9,6 +9,7 @@ import Welcome from '../components/Welcome.vue'
 import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import User from '../components/User.vue'
+import Test from '../components/Test.vue'
 
 Vue.use(VueRouter)
 
@@ -36,6 +37,10 @@ const routes = [
   {
     path: "/register",
     component: Register
+  },
+  {
+    path: "/test",
+    component: Test
   }
 ]
 

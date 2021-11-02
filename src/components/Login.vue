@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       loginForm: {
-        email: "test@email.com",
+        email: "",
         password: "",
       },
       loginRules: {

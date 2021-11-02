@@ -1,7 +1,7 @@
 <template>
   <div class="main_container">
       <h2>User List</h2>
-      <div v-for="user in users">
+      <div v-for="user of users" v-bind:key="user.id">
         <el-link :href="'/#/users/' + user.id" target="_blank">
         <strong>{{ user.username }}</strong></el-link>
         <div class="split_line"></div>
