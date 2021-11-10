@@ -1,41 +1,38 @@
 <template>
-  <div class="container">
-    <aside class="side_bar">
-      <div class="avatar_box">
-        <img src="../assets/logo.png" width="80px" height="80px" />
-        <strong class="name">{{ this.user.username }}</strong>
+  <el-container>
+    <el-aside class="aside-container">
+      <div class="user-info">
+        <a :href="'/#/users/' + user.userId"><img class="user-info--avatar" :src="require('../assets/HeadImg/' + user.email + '.jpg')"/></a>
+        <strong style="position: relative; left: 24%; font-size: 24px"><a :href="'/#/users/' + user.userId">{{ user.username }}</a></strong>
       </div>
-      <div class="post_box">
-        <form :model="postForm">
-          <textarea
-            rows="6"
-            cols="40"
-            prop="content"
-            v-model="postForm.content"
-          ></textarea>
-          <input class="btn" type="button" name="Post" @click="post" value="Post" />
-        </form>
-      </div>
-    </aside>
-    <div class="content_container">
-      <h2>Microposts</h2>
-      <div class="content">
+      <el-input
+          type="textarea"
+          :rows="5"
+          v-model="postForm.content"
+          class="text-box"
+      >
+      </el-input>
+      <el-button class="btn" @click="post" type="primary" round>Post</el-button>
+    </el-aside>
+    <el-main class="main-container">
+      <h2 style="padding-bottom: 3%">Microposts</h2>
+      <div>
         <ul>
           <li v-for="content in contents" v-bind:key="content.userId">
-            <div>
-              <a :href="'/#/users/' + content.userId" class="headImg_box"
-                ><img class="head_img" :src="require('../assets/HeadImg/' + content.email + '.jpg')" width="50px" height="50px"
-              /></a>
-              <strong>{{ content.username }}</strong>
-              <p>{{ content.content }}</p>
-              <small class="date_box">{{ time(content.crtTime) }}</small>
-              <div class="shadow_line"></div>
+            <div class="avatar-box">
+              <a class="avatar" :href="'/#/users/' + content.userId"><img :src="require('../assets/HeadImg/' + content.email + '.jpg')"></a>
+              <p class="name">{{ content.username }}</p>
             </div>
+            <div class="content-box">
+              <p>{{ content.content }}</p>
+              <small>{{ timeFormat(content.crtTime) }}</small>
+            </div>
+            <div class="split-line"></div>
           </li>
         </ul>
       </div>
-    </div>
-  </div>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
@@ -43,126 +40,105 @@ export default {
   data() {
     return {
       user: {
-        username: "",
+        userId: "",
+        email: "",
+        username: ""
       },
       postForm: {
         userId: "",
-        content: "",
+        content: ""
       },
       contents: "",
-    };
+    }
   },
   created() {
-    let data = window.sessionStorage.getItem("user");
-    this.user.username = JSON.parse(data).username;
-    console.log(this.user.username);
-    this.getContent();
+    this.initUserInfo();
+    console.log(this.user);
+    this.getContents();
   },
   methods: {
+    async initUserInfo() {
+      let user = window.sessionStorage.getItem("user")
+      this.user.userId = JSON.parse(user).id;
+      this.user.email = JSON.parse(user).email;
+      this.user.username = JSON.parse(user).username;
+    },
     async post() {
-      if (this.postForm.content === "") {
-        this.$message.error("內容爲空");
-        return;
-      }
       this.postForm.userId = JSON.parse(window.sessionStorage.getItem("user")).id;
-      console.log(this.postForm.userId);
-      const { data: res } = await this.$http.post("post", this.postForm);
+      const {data:res} = await this.$http.post("post", this.postForm);
       if (res.flag == "success") {
-        this.$message.success("發佈成功");
-        this.getContent();
+        this.$message.success("Posted!");
+        await this.getContents();
         this.postForm.content = "";
         return;
       }
-      this.$message.error("發佈失敗");
+      this.$message.error("Error!");
     },
-    async getContent() {
-      const { data: res } = await this.$http.get("/getContent");
+    async getContents() {
+      const {data:res} = await this.$http.get("getContent");
       this.contents = res;
     },
-    time(time =+ new Date()) {
-      var date = new Date(time + 16 * 3600 * 1000);
+    timeFormat(time =+ new Date()) {
+      const date = new Date(time + 16 * 3600 * 1000);
       return date.toJSON().substr(5, 14).replace('T', ' ');
     }
-  },
+  }
 };
 </script>
 
 <style scoped>
-
-.headImg_box {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border: 1px solid #eee;
-    border-radius: 50%;
-    box-shadow: 0 0 2px #ddd;
-}
-.head_img {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #eee;
-}
-.post_time {
+.main-container {
   position: relative;
-  left: 60%;
+}
+.aside-container {
+  position: relative;
+  width: 25%;
+  height: auto;
+  background-color: #fff;
+}
+.user-info {
+  position: relative;
+  padding: 30%;
+}
+.user-info--avatar {
+  height: 100px;
+  width: 100px;
+  border: 1px solid #adafb4;
+  box-shadow: 0 0 5px #adafb4;
+}
+.text-box {
+  position: relative;
+  padding-bottom: 2%;
 }
 .btn {
   position: relative;
-  padding: 3%;
-  left: 75%;
-  margin: 2%;
+  left: 70%;
 }
-.post_box {
+.avatar-box {
   position: relative;
-  padding-left: 6%;
-  padding-top: 70%;
 }
-.shadow_line {
-  width: 700px;
-  height: 1px;
-  background-color: #dcdfe6;
-  margin-top: 2%;
-}
-h2 {
-  padding: 2em;
-}
-ul {
-  list-style-type: none;
-}
-li {
-  padding: 1em;
-}
-
-.side_bar {
-  width: 30%;
-  height: 100%;
-  position: absolute;
-  background-color: #2b4b6b;
-}
-.content_container {
-  width: 70%;
-  height: 100%;
-  position: absolute;
-  right: 0;
-  background-color: #fff;
-}
-.avatar_box {
-  height: 50%;
-  margin: 10px;
-  position: absolute;
-  left: 10%;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-flex;
-  display: flex;
-}
-
 .name {
   position: relative;
-  padding: 15%;
-  bottom: 7%;
+  left: 1%;
+}
+.content-box {
+  position: relative;
+  padding-left: 8%;
+}
+.split-line {
+  height: 1px;
+  background-color: #d2dada;
+  margin: 3%;
+}
+ul {
+  list-style: none;
+}
+img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+a {
+  text-decoration: none;
 }
 </style>

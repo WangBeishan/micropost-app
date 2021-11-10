@@ -1,22 +1,20 @@
 <template>
-  <div class="main_container">
-    <el-card shadow="always" class="card_container">
-      <div slot="header" class="header_box">
-        <strong>{{ this.user.username }}</strong>
+  <el-card class="box-card">
+    <div slot="header" class="header-name">
+      <span>{{ user.username }}</span>
+    </div>
+    <div v-for="content in contents">
+      <div class="avatar-box">
+        <a class="avatar" :href="'/#/users/' + content.userId"><img :src="require('../assets/HeadImg/' + content.email + '.jpg')"></a>
+        <p class="name">{{ content.username }}</p>
       </div>
-      <!-- card body -->
-      <div v-for="content in contents" class="content_container" v-bind:key="content.userId">
-        <aside class="avatar_box">
-          <img :src="require('../assets/HeadImg/' + user.email + '.jpg')"/>
-        </aside>
-        <main class="content_box">
-          <strong>{{ content.username }}</strong>
-          <p>{{ content.content }}</p>
-        </main>
-        <div class="split_line"></div>
+      <div class="content-box">
+        <p>{{ content.content }}</p>
+        <small>{{ timeFormat(content.crtTime) }}</small>
       </div>
-    </el-card>
-  </div>
+      <div class="split-line"></div>
+    </div>
+  </el-card>
 </template>
 
 <script>
@@ -26,75 +24,68 @@ export default {
       user: {
         id: "",
         username: "",
-        email: "",
+        email: ""
       },
-      contents: "",
-    };
+      contents: ""
+    }
   },
   created() {
     this.getUser();
-    this.getContent();
+    this.getContents();
   },
   methods: {
     async getUser() {
       this.user.id = this.$route.params.id;
-      const { data: res } = await this.$http.get("/users/" + this.user.id);
+      const { data:res } = await this.$http.get('/users/' + this.user.id);
       this.user.username = res.username;
       this.user.email = res.email;
     },
-    async getContent() {
-      const { data: res } = await this.$http.get("/contentByUserId/" + this.user.id);
+    async getContents() {
+      const { data:res } = await this.$http.get("/contentByUserId/" + this.user.id);
       this.contents = res;
     },
-  },
-};
+    timeFormat(time =+ new Date()) {
+      const date = new Date(time + 16 * 3600 * 1000);
+      return date.toJSON().substr(5, 14).replace('T', ' ');
+    }
+  }
+}
 </script>
 
 <style scoped>
-.main_container {
-  position: absolute;
-  padding-top: 2%;
-  padding-bottom: 2%;
-  left: 20%;
+.box-card {
+  position: relative;
+  transform: translateY(2%);
+  width: 50%;
+  left: 25%;
 }
-.header_box {
+.header-name {
+  position: relative;
   text-align: center;
-  font-size: 20px;
-  padding: 1%;
+  font-size: xx-large;
 }
-.card_container {
-  width: 300%;
-  height: 100%;
+.avatar-box {
+  position: relative;
 }
-.split_line {
+.name {
+  position: relative;
+  left: 1%;
+}
+.content-box {
+  position: relative;
+  padding-left: 8%;
+}
+.split-line {
   height: 1px;
-  background-color: #dcdfe6;
-  margin: 5%;
-}
-.content_container {
-    position: relative;
-    flex: 1 1 auto;
-}
-.avatar_box {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border: 1px solid #eee;
-    border-radius: 50%;
-    box-shadow: 0 0 2px #ddd;
-    left: 1%;
+  background-color: #d2dada;
+  margin: 3%;
 }
 img {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #eee;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
 }
-.content_box {
-    position: relative;
-    left: 5%;
-    top: -30%;
-    flex: 1 1 auto;
+a {
+  text-decoration: none;
 }
 </style>

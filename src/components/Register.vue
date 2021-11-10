@@ -78,6 +78,10 @@ export default {
       this.code = res;
     },
     async register() {
+      if (this.registerForm.verifyCode == " ") {
+        this.$message.error("Verify code null, Please entry.");
+        return;
+      }
       if (
         this.code != this.registerForm.verifyCode
       ) {

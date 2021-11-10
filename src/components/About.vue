@@ -31,7 +31,7 @@ export default {};
   position: relative;
   text-align: center;
   padding: 5%;
-  left: 20%;
+  left: 24%;
 }
 .split_line {
   height: 1px;

@@ -1,16 +1,16 @@
 <template>
-  <div class="main_container">
-      <h2>User List</h2>
-      <div v-for="user of users" v-bind:key="user.id">
-        <el-link :href="'/#/users/' + user.id" target="_blank">
-        <strong>{{ user.username }}</strong></el-link>
-        <div class="split_line"></div>
-      </div>
-      <el-pagination
+  <div class="main-container">
+    <h2 style="padding: 5%" >Users</h2>
+    <div v-for="user in users" v-bind:key="user.id">
+      <a :href="'/#/users/' + user.id"><img :src="require('../assets/HeadImg/' + user.email + '.jpg')"></a>
+      <a style="padding-left: 5%" :href="'/#/users/' + user.id">{{ user.username }}</a>
+      <div class="split-line"></div>
+    </div>
+    <el-pagination
+        small
         layout="prev, pager, next"
-        :total="users.length"
-        hide-on-single-page
-      ></el-pagination>
+        :total="users.length">
+    </el-pagination>
   </div>
 </template>
 
@@ -18,31 +18,40 @@
 export default {
   data() {
     return {
-      users: "",
-    };
+      users: ""
+    }
   },
   created() {
-    this.getAllUser();
+    this.getUsers();
   },
   methods: {
-    async getAllUser() {
-      const { data: res } = await this.$http.get("getAllUser");
+    async getUsers() {
+      const { data:res} = await this.$http("getAllUser");
       this.users = res;
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style scoped>
-.main_container {
+.main-container {
   position: relative;
-  padding-top: 3%;
-  left: 42%;
   text-align: center;
+  left: 42%;
 }
-.split_line {
+.split-line {
+  position: relative;
   height: 1px;
-  background-color: #dcdfe6;
-  margin: 8%;
+  background-color: #d2dada;
+  width: 200px;
+  margin: 10%;
+}
+img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+a {
+  text-decoration: none;
 }
 </style>

@@ -64,7 +64,7 @@ export default {
             if (res.flag == "ok") {
                 this.$message.success("登錄成功");
                 window.sessionStorage.setItem("user", JSON.stringify(res.user));
-                this.$router.push("home");
+                await this.$router.push("home");
             } else {
                 this.$message.error("登錄失敗，請重新登錄");
             }
